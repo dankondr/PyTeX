@@ -27,14 +27,20 @@ while x != '':
             b.append(int(x[i]))
     a.append(b)
     x = f.readline()
-RES = 4  # Amount of numbers in answer
+RES = 0  # Amount of numbers in answer
 print('\\begin{pmatrix}')
 for s in a:
     m = len(s) - RES
     for el in s[:RES]:
         print(el, '&', end=' ')
-    print('\\aug', end=' ')
-    for el in s[RES:]:
-        print('&', el, end=' ')
+    if RES != 0:
+        print('\\aug', end=' ')
+    for i in range(RES, len(s)):
+        if RES != 0:
+            print('&', s[i], end=' ')
+        elif i != len(s) - 1:
+            print(s[i], '&', end=' ')
+        else:
+            print(s[i], end=' ')
     print('\\\\')
 print('\\end{pmatrix}')
