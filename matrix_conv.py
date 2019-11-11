@@ -13,34 +13,36 @@ begin{pmatrix}
 end{pmatrix}
 """
 
-f = open('input.txt', encoding='utf-8')
 
-x = f.readline()
-a = []
-while x != '':
-    x = x[2:-2].split(' ')
-    b = []
-    for i in range(len(x)):
-        if x[i] == '' or x[i] == ' ':
-            continue
-        else:
-            b.append(int(x[i]))
-    a.append(b)
-    x = f.readline()
-RES = 0  # Amount of numbers in answer
-print('\\begin{pmatrix}')
-for s in a:
-    m = len(s) - RES
-    for el in s[:RES]:
-        print(el, '&', end=' ')
+def matrix_to_TeX(line):
+    s = line[0] + ' '
+    for i in range(1, len(line) - RES):
+        s += '& ' + line[i] + ' '
     if RES != 0:
-        print('\\aug', end=' ')
-    for i in range(RES, len(s)):
-        if RES != 0:
-            print('&', s[i], end=' ')
-        elif i != len(s) - 1:
-            print(s[i], '&', end=' ')
-        else:
-            print(s[i], end=' ')
-    print('\\\\')
-print('\\end{pmatrix}')
+        s += '& \\aug '
+    for i in range(len(line) - RES, len(line)):
+        s += '& ' + line[i] + ' '
+    s += '\\\\'
+    return s
+
+
+f = open('input.txt', encoding='utf-8')
+out = open('output.txt', 'w+', encoding='utf-8')
+RES = int(input())  # Amount of numbers in answer
+
+started = False
+for line in f:
+    if not started:
+        started = True
+        out.write('\\begin{pmatrix}\n')
+    if line == '\n':
+        out.write('\\end{pmatrix}\n')
+        out.write('\\implies\n')
+        started = False
+        continue
+    line = line.replace('[', ' ')
+    line = line.replace(']', ' ')
+    line = line.split()
+    print(line)
+    out.write(matrix_to_TeX(line) + '\n')
+out.write('\\end{pmatrix}\n')
