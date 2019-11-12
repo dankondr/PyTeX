@@ -31,18 +31,28 @@ out = open('output.txt', 'w+', encoding='utf-8')
 RES = int(input())  # Amount of numbers in answer
 
 started = False
+c = 1
+first = True
 for line in f:
     if not started:
         started = True
-        out.write('\\begin{pmatrix}\n')
+        s = '\\[\n' if c % 2 != 0 else ''
+        if not first and c % 2 != 0:
+            s += '\\implies\n'
+        else:
+            first = False
+        s += '\\begin{pmatrix}\n'
+        out.write(s)
     if line == '\n':
         out.write('\\end{pmatrix}\n')
         out.write('\\implies\n')
+        if c % 2 == 0:
+            out.write('\\]\n')
         started = False
+        c += 1
         continue
     line = line.replace('[', ' ')
     line = line.replace(']', ' ')
     line = line.split()
-    print(line)
     out.write(matrix_to_TeX(line) + '\n')
-out.write('\\end{pmatrix}\n')
+out.write('\\end{pmatrix}\n\\]')
